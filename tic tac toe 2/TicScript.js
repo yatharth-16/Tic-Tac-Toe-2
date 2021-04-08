@@ -220,7 +220,7 @@ function generateRandomNumbers(min, max) {
 
 /**
  * Finds next empty element in Matrix for computer.
- * and calls Action Perform.
+ * and calls ActionPerformedByPlayer.
  * 
  */
 function Computer() {
