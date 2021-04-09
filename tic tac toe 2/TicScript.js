@@ -32,10 +32,8 @@ function togglePlayer() {
      * The function toggles the current player and diplays the 
      * scores according to the player which is playing
      */
-
     reset();
-
-
+    
     if (toggle == "computer") {
         toggle = "player2";
         document.getElementById("score2").innerHTML = "Player 2 Score";
@@ -64,13 +62,11 @@ function reset() {
     clickCounter = 0;
     win1 = -1;
 
-
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             matrix[i][j] = -1;
         }
     }
-
     document.getElementById("00").innerHTML = "";
     document.getElementById("01").innerHTML = "";
     document.getElementById("02").innerHTML = "";
@@ -82,7 +78,6 @@ function reset() {
     document.getElementById("22").innerHTML = "";
 }
 
-
 /**
  * Fills the gameboard Acoording to players.
  *
@@ -92,8 +87,7 @@ function reset() {
  * 
  */
 function ActionPerformedByPlayer(elem, row, col) {
-
-
+    
     if (toggle == "computer") {
 
         Action(toggle, elem, row, col);
@@ -112,7 +106,6 @@ function ActionPerformedByPlayer(elem, row, col) {
  * 
  */
 function Action(toggle, elem, row, col) {
-
     /**
      * This function displays output according to the win condition
      * and according to toggle condition provides moves to other 
@@ -197,7 +190,6 @@ function checkMatrix() {
      * in every row,column and both of the diagonals.
      */
 
-
     let win = -1;
     for (var i = 0; i < 3; i++) {
 
@@ -205,33 +197,25 @@ function checkMatrix() {
         if (matrix[i][0] != -1 && matrix[i][0] == matrix[i][1] && matrix[i][1] == matrix[i][2]) {
             win = matrix[i][0];
             return win;
-
         }
-
         // Column check
         if (matrix[0][i] != -1 && matrix[0][i] == matrix[1][i] && matrix[1][i] == matrix[2][i]) {
             win = matrix[0][i];
             return win;
         }
-
     }
-
     // 1st diagonal check
     if (matrix[0][0] != -1 && matrix[0][0] == matrix[1][1] && matrix[1][1] == matrix[2][2]) {
         win = matrix[0][0];
         return win;
     }
-
     // 2nd diagonal check
     if (matrix[0][2] != -1 && matrix[0][2] == matrix[1][1] && matrix[1][1] == matrix[2][0]) {
         win = matrix[0][2];
         return win;
     }
-
     return win;
 }
-
-
 
 /**
  * Finds if playing on current spot is optimal move or not.
@@ -299,14 +283,12 @@ function miniMax(matrix, isMaximizing) {
         return bestScore;
     }
 }
-
 /**
  * Finds next empty element in Matrix for computer.
  * and calls Action Perform.
  * 
  */
 function Computer() {
-
     /**
      * This function finds the optimal
      * solution for that particular player
@@ -364,7 +346,6 @@ function ConfettiAnimation() {
     start();
     stop();
 }
-
 /**
  * Restart Button is made after ending of game.
  *
