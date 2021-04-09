@@ -6,25 +6,33 @@
  * diagonal row is the winner
  */
 
-
+let win1 = -1;
 let turn = 1;
-let win = -1;
 let clickCounter = 0;
 const matrix = [
     [-1, -1, -1],
     [-1, -1, -1],
     [-1, -1, -1]
 ];
+
 let toggle = "computer";
 let score1 = 0;
 let score2 = 0;
 let draw = 0;
+let ai = 2;
+let human = 1;
 
 /**
  * Toggles the current player.
  * 
  */
 function togglePlayer() {
+
+    /** 
+     * The function toggles the current player and diplays the 
+     * scores according to the player which is playing
+     */
+
     reset();
 
 
@@ -51,9 +59,10 @@ function togglePlayer() {
  *
  */
 function reset() {
+    console.log("in this");
     turn = 1;
-    win = -1;
     clickCounter = 0;
+    win1 = -1;
 
 
     for (let i = 0; i < 3; i++) {
@@ -84,6 +93,7 @@ function reset() {
  */
 function ActionPerformedByPlayer(elem, row, col) {
 
+
     if (toggle == "computer") {
 
         Action(toggle, elem, row, col);
@@ -102,7 +112,14 @@ function ActionPerformedByPlayer(elem, row, col) {
  * 
  */
 function Action(toggle, elem, row, col) {
-    if (win != -1)
+
+    /**
+     * This function displays output according to the win condition
+     * and according to toggle condition provides moves to other 
+     * player or computer
+     */
+
+    if (win1 != -1)
         return;
 
     if (elem != null)
@@ -110,6 +127,7 @@ function Action(toggle, elem, row, col) {
             return;
 
     matrix[row][col] = turn;
+
     if (turn == 1) {
         elem.innerHTML = "X";
         if (toggle == "computer")
@@ -125,8 +143,8 @@ function Action(toggle, elem, row, col) {
         turn = 1;
         clickCounter++;
     }
-    win = checkMatrix();
-
+    let win = checkMatrix();
+    win1 = win;
     if (win != -1) {
         if (win == 1) {
             document.getElementById("messagesection").innerHTML = " Player " + win + " Won the match ";
@@ -162,7 +180,7 @@ function Action(toggle, elem, row, col) {
 
     if (toggle == "computer") {
         if (turn == 2) {
-            Computer(row, col);
+            Computer();
         }
     }
 }
@@ -174,6 +192,13 @@ function Action(toggle, elem, row, col) {
  */
 function checkMatrix() {
 
+    /**
+     * This function checks for the win condition
+     * in every row,column and both of the diagonals.
+     */
+
+
+    let win = -1;
     for (var i = 0; i < 3; i++) {
 
         // Row check
@@ -206,65 +231,114 @@ function checkMatrix() {
     return win;
 }
 
-/**
- * Generates a random number between a given range.
- *
- * @param {number} min The min number of given range.
- * @param {number} max The max number of given range.
- * @return {number} return the random number.
- */
-function generateRandomNumbers(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
 
+
+/**
+ * Finds if playing on current spot is optimal move or not.
+ *
+ * @param {Array} matrix The Two-dimensional Array denoting gameboard.
+ * @param {boolean} isMaximizing Tells if maximizing or minimizing.
+ * @return {number} The best Score for that move
+ * 
+ */
+function miniMax(matrix, isMaximizing) {
+    /**
+     * miniMax algorithm is implemented
+     * in this code which uses recurssion
+     * and backtracking to find the optimal
+     * solution for the computer player
+     */
+
+    let result = checkMatrix();
+    if (result != -1) {
+
+        //checks if player is winning on that point
+        if (result == 1)
+            return -1;
+        //checks if computer is winning on that point
+        else if (result == 2)
+            return +1;
+        //checks if its leading to draw condition or not      
+    } else if (clickCounter == 9) {
+        return 0;
+    }
+    if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                //is empty spot available
+                if (matrix[i][j] == -1) {
+                    matrix[i][j] = ai;
+                    clickCounter++;
+                    let score = miniMax(matrix, false);
+                    matrix[i][j] = -1;
+                    clickCounter--;
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+
+        }
+        return bestScore;
+    } else {
+
+        let bestScore = Infinity;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                //is empty spot available
+                if (matrix[i][j] == -1) {
+                    matrix[i][j] = human;
+                    clickCounter++;
+                    let score = miniMax(matrix, true);
+                    matrix[i][j] = -1;
+                    clickCounter--;
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+
+        }
+        return bestScore;
+    }
 }
 
 /**
  * Finds next empty element in Matrix for computer.
- * and calls ActionPerformedByPlayer.
+ * and calls Action Perform.
  * 
  */
 function Computer() {
 
+    /**
+     * This function finds the optimal
+     * solution for that particular player
+     * and gives the coorinates to
+     * ActionPerformedByPlayer function
+     */
+    let x = -1;
+    let y = -1;
+    let bestScore = -Infinity;
 
-    let x = generateRandomNumbers(0, 3);
-    let y = generateRandomNumbers(0, 3);
-
-    while (matrix[x][y] != -1) {
-        if (clickCounter == 9) {
-            x = -1;
-            y = -1;
-            break;
+    //Traverses the whole matrix to check
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            //is spot available
+            if (matrix[i][j] == -1) {
+                matrix[i][j] = ai;
+                clickCounter++;
+                let score = miniMax(matrix, false);
+                matrix[i][j] = -1;
+                clickCounter--;
+                if (score > bestScore) {
+                    bestScore = score;
+                    x = i;
+                    y = j;
+                }
+            }
         }
-        x = generateRandomNumbers(0, 3);
-        y = generateRandomNumbers(0, 3);
-
-        if (matrix[x][y] == -1)
-            break;
-
     }
 
     let coordinates = "" + x + y;
-    console.log(coordinates);
     var ele = document.getElementById(coordinates);
     ActionPerformedByPlayer(ele, x, y);
-
-    /* Another Logic Generating empty element
-  let x = -1;
-  let y = -1;
-  for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-
-          //checks if not current row or column.
-          if (i != row || j != col) {
-              if (matrix[i][j] == -1) {
-                  x = i;
-                  y = j;
-                  break;
-              }
-          }
-      }
-  }
-  */
 
 }
 
