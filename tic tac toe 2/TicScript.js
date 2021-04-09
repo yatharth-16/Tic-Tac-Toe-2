@@ -236,7 +236,7 @@ function checkMatrix() {
 /**
  * Finds if playing on current spot is optimal move or not.
  *
- * @param {Array} matrix The Two-dimensional Array denoting gameboard.
+ * @param {object} matrix The Two-dimensional Array denoting gameboard.
  * @param {boolean} isMaximizing Tells if maximizing or minimizing.
  * @return {number} The best Score for that move
  * 
