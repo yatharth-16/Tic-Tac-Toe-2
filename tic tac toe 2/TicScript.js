@@ -292,7 +292,7 @@ function Computer() {
     /**
      * This function finds the optimal
      * solution for that particular player
-     * and gives the coorinates to
+     * and gives the coordinates to
      * ActionPerformedByPlayer function
      */
     let x = -1;
